@@ -4,6 +4,7 @@ from math import radians, sin, cos, sqrt, atan2
 import folium
 import networkx as nx
 import numpy as np
+import osmnx as ox
 ox.settings.overpass_url = "https://overpass.kumi.systems/api"
 ox.settings.overpass_rate_limit = False
 ox.settings.requests_timeout = 180
