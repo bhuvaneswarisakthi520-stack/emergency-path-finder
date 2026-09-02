@@ -1,0 +1,9 @@
+streamlit
+osmnx
+networkx
+pandas
+numpy
+folium
+streamlit-folium
+scikit-learn
+torch
