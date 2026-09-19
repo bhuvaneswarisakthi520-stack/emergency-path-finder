@@ -73,7 +73,7 @@ def load_hotspots():
 
 @st.cache_resource(show_spinner="Training the prototype spatial-temporal GAT model...")
 def load_risk_engine():
-    @st.cache_resource(show_spinner=False)
+@st.cache_resource(show_spinner=False)
 def download_road_graph(latitude, longitude, radius_meters):
     errors = []
 
@@ -428,4 +428,5 @@ if st.session_state.show_result:
             "Check that both locations are valid Greater Columbus addresses "
             "and that your internet connection is active."
         )
+
 
