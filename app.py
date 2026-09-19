@@ -69,10 +69,12 @@ def load_hotspots():
     )
 
     return hotspots
-
-
-@st.cache_resource(show_spinner="Training the prototype spatial-temporal GAT model...")
+    @st.cache_resource(show_spinner="Training the prototype spatial-temporal GAT model...")
 def load_risk_engine():
+    """Build the unified emergency spatial dataset and train prototype AI models."""
+    return RiskIntelligenceEngine(pd.read_csv(DATA_FILE))
+
+
 @st.cache_resource(show_spinner=False)
 def download_road_graph(latitude, longitude, radius_meters):
     errors = []
@@ -91,8 +93,6 @@ def download_road_graph(latitude, longitude, radius_meters):
     raise RuntimeError(
         "All road-network servers timed out. Please try again shortly."
     )
-    """Build the unified emergency spatial dataset and train prototype AI models."""
-    return RiskIntelligenceEngine(pd.read_csv(DATA_FILE))
 
 
 def add_risk_weights(road_graph, risk_engine):
@@ -428,6 +428,7 @@ if st.session_state.show_result:
             "Check that both locations are valid Greater Columbus addresses "
             "and that your internet connection is active."
         )
+
 
 
 
