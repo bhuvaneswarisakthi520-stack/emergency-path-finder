@@ -5,9 +5,14 @@ import folium
 import networkx as nx
 import numpy as np
 import osmnx as ox
-ox.settings.overpass_url = "https://overpass.private.coffee/api"
+OVERPASS_ENDPOINTS = [
+    "https://overpass-api.de/api",
+    "https://overpass.kumi.systems/api",
+    "https://overpass.private.coffee/api",
+]
+
 ox.settings.overpass_rate_limit = False
-ox.settings.requests_timeout = 180
+ox.settings.requests_timeout = 90
 import pandas as pd
 import streamlit as st
 from streamlit_folium import st_folium
@@ -68,6 +73,24 @@ def load_hotspots():
 
 @st.cache_resource(show_spinner="Training the prototype spatial-temporal GAT model...")
 def load_risk_engine():
+    @st.cache_resource(show_spinner=False)
+def download_road_graph(latitude, longitude, radius_meters):
+    errors = []
+
+    for endpoint in OVERPASS_ENDPOINTS:
+        try:
+            ox.settings.overpass_url = endpoint
+            return ox.graph_from_point(
+                (latitude, longitude),
+                dist=radius_meters,
+                network_type="drive"
+            )
+        except Exception as error:
+            errors.append(f"{endpoint}: {error}")
+
+    raise RuntimeError(
+        "All road-network servers timed out. Please try again shortly."
+    )
     """Build the unified emergency spatial dataset and train prototype AI models."""
     return RiskIntelligenceEngine(pd.read_csv(DATA_FILE))
 
@@ -204,11 +227,11 @@ if st.session_state.show_result:
                 int((direct_distance * 1000) / 2 + 5000)
             )
 
-            road_graph = ox.graph_from_point(
-                midpoint,
-                dist=radius_meters,
-                network_type="drive"
-            )
+            road_graph = download_road_graph(
+            midpoint[0],
+            midpoint[1],
+            radius_meters
+            ).copy()
 
             hotspots = load_hotspots()
             risk_engine = load_risk_engine()
@@ -405,3 +428,4 @@ if st.session_state.show_result:
             "Check that both locations are valid Greater Columbus addresses "
             "and that your internet connection is active."
         )
+
