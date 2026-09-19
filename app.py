@@ -69,7 +69,7 @@ def load_hotspots():
     )
 
     return hotspots
-    @st.cache_resource(show_spinner="Training the prototype spatial-temporal GAT model...")
+@st.cache_resource(show_spinner="Training the prototype spatial-temporal GAT model...")
 def load_risk_engine():
     """Build the unified emergency spatial dataset and train prototype AI models."""
     return RiskIntelligenceEngine(pd.read_csv(DATA_FILE))
@@ -428,6 +428,7 @@ if st.session_state.show_result:
             "Check that both locations are valid Greater Columbus addresses "
             "and that your internet connection is active."
         )
+
 
 
 
